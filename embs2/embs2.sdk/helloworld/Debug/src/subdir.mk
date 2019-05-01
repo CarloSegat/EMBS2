@@ -9,17 +9,23 @@ LD_SRCS += \
 C_SRCS += \
 ../src/helloworld.c \
 ../src/net.c \
-../src/platform.c 
+../src/platform.c \
+../src/test_drawing.c \
+../src/test_hdmi.c 
 
 OBJS += \
 ./src/helloworld.o \
 ./src/net.o \
-./src/platform.o 
+./src/platform.o \
+./src/test_drawing.o \
+./src/test_hdmi.o 
 
 C_DEPS += \
 ./src/helloworld.d \
 ./src/net.d \
-./src/platform.d 
+./src/platform.d \
+./src/test_drawing.d \
+./src/test_hdmi.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

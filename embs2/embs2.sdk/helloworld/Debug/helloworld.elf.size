@@ -1,2 +1,2 @@
    text	   data	    bss	    dec	    hex	filename
- 147252	   4224	2152736	2304212	 2328d4	helloworld.elf
+ 176440	   4360	12638496	12819296	 c39b60	helloworld.elf
