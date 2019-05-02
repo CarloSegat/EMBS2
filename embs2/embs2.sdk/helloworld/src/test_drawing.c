@@ -2,7 +2,7 @@
  * Example of using the Digilent display drivers for Zybo Z7 HDMI output, with animation
  * Russell Joyce, 11/03/2019
  */
-
+#include <math.h>
 #include <stdio.h>
 #include "xil_types.h"
 #include "xil_cache.h"
@@ -101,7 +101,7 @@ int main(void) {
 	u32 buff = dispCtrl.curFrame;
 
 	int fake_puzzle[] = {0,1,2,3, 4,5,6,7, 8,9,0,1, 2,3,4,5};
-	int puzzle_size = 4;
+	int puzzle_size = 2;
 
 	while (1) {
 			// Switch the frame we're modifying to be the back buffer (1 to 0, or 0 to 1)
@@ -111,33 +111,104 @@ int main(void) {
 			// Clear the entire frame to white (inefficient, but it works)
 			memset(frame, 0xFF, MAX_FRAME*4);
 
-			// 45 x 45 squares
-
-			for(int piece = 0; piece < puzzle_size; piece++)
+			for(int tile = 0;   tile<puzzle_size*puzzle_size;   tile++)
 			{
-				for(int tile = 0; tile < 4; tile++)
+				for(int section=0;   section<4;   section++)
 				{
-					int color_to_use = get_colour(fake_puzzle[piece*4 + tile]);
 
-					int x_pos = (45 * piece) % (45 * puzzle_size); // where to start depending of tile
-					int x_stride = 45; // how much to draw on the right
+					int colour_to_use = get_colour(fake_puzzle[tile*4 + section]);
 
+					int x_start;
+					int x_width;
+					int y_max;
+					int y_start;
 
-					int y_stride = 22;
-						for (x = x_pos; x < xpos+x_stride; x++) {
-							int y_pos = 0;
-							for (y = ypos; y < ypos+64; y++) {
-								frame[y*stride + x] = 200;
-							}
+					switch(section){
+						case 0:
+							x_start = 1;
+							x_width = 43;
+							y_max = 22;
+							y_start = 0;
+							break;
+						case 1:
+							x_start = 24;
+							x_width = 22;
+							y_max = 43;
+							y_start = 0;
+							break;
+						case 2:
+							x_start = 1;
+							x_width = 43;
+							y_max = 22;
+							y_start = 0;
+							break;
+						case 3:
+							x_start = 0;
+							x_width = 22;
+							y_max = 43;
+							y_start = 43;
+							break;
+					}
+
+					int row = floor(tile / puzzle_size);
+					int row_stride = (row * 45) * 1440;
+
+					int column = tile % puzzle_size;
+					int column_stride = column * 45;
+
+					int increasing = 1;
+					int next_y = y_start;
+					int x_iteration = 0;
+
+					for(int x = x_start;   x < x_start + x_width;   x++){
+						x_iteration += 1;
+
+						switch(section){
+							case 0:
+								for(int y = y_start; y < next_y; y++){
+									frame[y*1440 + row_stride + (x+ column_stride)] = colour_to_use;
+								}
+								if(increasing){
+									next_y += 1;
+								} else {
+									next_y -= 1;
+								}
+
+								if(next_y == y_max){
+									increasing = 0;
+								}
+								break;
+							case 1:
+								for(int y = y_start; y < next_y; y++){
+									frame[y*1440 + row_stride + (1440*23) - (x_iteration*1440) + (x+ column_stride)] = colour_to_use;
+								}
+								next_y += 2;
+
+								break;
+							case 2:
+								for(int y = y_start; y < next_y; y++){
+									frame[-y*1440 + row_stride + (1440*45) + (x+ column_stride)] = colour_to_use;
+								}
+								if(increasing){
+									next_y += 1;
+								} else {
+									next_y -= 1;
+								}
+
+								if(next_y == y_max){
+									increasing = 0;
+								}
+								break;
+							case 3:
+								for(int y = 0; y < next_y; y++){
+									frame[y*1440 + row_stride + (x_iteration*1440) + (x+ column_stride)] = colour_to_use;
+								}
+								next_y -= 2;
+
+								break;
 						}
+					}
 
-				}
-			}
-
-			// Draw black square on the screen
-			for (x = xpos; x < xpos+64; x++) {
-				for (y = ypos; y < ypos+64; y++) {
-					frame[y*stride + x] = 200;
 				}
 			}
 

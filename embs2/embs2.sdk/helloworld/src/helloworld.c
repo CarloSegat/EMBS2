@@ -23,7 +23,7 @@ void udp_get_handler(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_ad
     }
 }
 
-int main_old() {
+int main21() {
     unsigned char mac_ethernet_address[] = {0x00, 0x11, 0x22, 0x33, 0x00, 0x51}; // Put your own MAC address here!
     init_platform(mac_ethernet_address, NULL, NULL);
 
