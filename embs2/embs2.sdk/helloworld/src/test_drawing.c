@@ -64,7 +64,7 @@ int get_colour(int tile) {
 	}
 }
 
-int main(void) {
+int main_oldd(void) {
 	// Initialise an array of pointers to the 2 frame buffers
 	int i;
 	for (i = 0; i < DISPLAY_NUM_FRAMES; i++)
