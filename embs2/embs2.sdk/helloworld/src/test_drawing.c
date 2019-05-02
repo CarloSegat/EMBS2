@@ -21,45 +21,46 @@ int get_colour(int tile) {
 	switch(tile) {
 
 		case 0:
-			return 25;
+			return 16765951;
 			break;
 
 		case 1:
-			return 50;
+			return 16776960;
 			break;
 
 		case 2:
-			return 75;
+			return 65280;
 			break;
 
 		case 3:
-			return 100;
+			return 16711680;
 			break;
 
 		case 4:
-			return 125;
+			return 16711935;
 			break;
 
 
 		case 5:
-			return 150;
+			return 10083745;
 			break;
 
 		case 6:
-			return 175;
+			return 10079231;
 			break;
 
 		case 7:
-			return 200;
+			return 1931520;
 			break;
 
 		case 8:
-			return 225;
+			return 9127796;
 			break;
 
 		case 9:
-			return 250;
+			return 16753920;
 			break;
+		exit(0);
 	}
 }
 
@@ -100,8 +101,8 @@ int main(void) {
 	int ypos = 0;
 	u32 buff = dispCtrl.curFrame;
 
-	int fake_puzzle[] = {0,1,2,3, 4,5,6,7, 8,9,0,1, 2,3,4,5};
-	int puzzle_size = 2;
+	int fake_puzzle[] = {0,1,2,3, 4,5,6,7, 8,9,0,1, 2,3,4,5, 0,1,2,3, 4,5,6,7, 8,9,0,1, 2,3,4,5, 0,1,2,3, 4,5,6,7, 8,9,0,1, 2,3,4,5, 0,1,2,3, 4,5,6,7, 8,9,0,1, 2,3,4,5};
+	int puzzle_size = 4;
 
 	while (1) {
 			// Switch the frame we're modifying to be the back buffer (1 to 0, or 0 to 1)
