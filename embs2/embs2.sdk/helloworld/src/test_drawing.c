@@ -60,25 +60,20 @@ int get_colour(int tile) {
 		case 9:
 			return 16753920;
 			break;
-		exit(0);
 	}
 }
 
-int main_oldd(void) {
+int print_puzzle(char *puzzle, int size) {
 	// Initialise an array of pointers to the 2 frame buffers
 	int i;
 	for (i = 0; i < DISPLAY_NUM_FRAMES; i++)
 		pFrames[i] = frameBuf[i];
-
 	// Initialise the display controller
 	DisplayInitialize(&dispCtrl, XPAR_AXIVDMA_0_DEVICE_ID, XPAR_VTC_0_DEVICE_ID, XPAR_HDMI_AXI_DYNCLK_0_BASEADDR, pFrames, FRAME_STRIDE);
-
 	// Start with the first frame buffer (of two)
 	DisplayChangeFrame(&dispCtrl, 0);
-
 	// Set the display resolution
 	DisplaySetMode(&dispCtrl, &VMODE_1440x900);
-
 	// Enable video output
 	DisplayStart(&dispCtrl);
 
@@ -88,21 +83,9 @@ int main_oldd(void) {
 	printf("Pixel Clock Frequency: %.3fMHz\n\r", dispCtrl.pxlFreq);
 	printf("Starting animation loop...\n\r");
 
-	// Get parameters from display controller struct
-	int x, y;
-	u32 stride = dispCtrl.stride / 4;
-	u32 width = dispCtrl.vMode.width;
-	u32 height = dispCtrl.vMode.height;
 
 	u32 *frame;
-	int right = 1;
-	int down = 1;
-	int xpos = 0;
-	int ypos = 0;
 	u32 buff = dispCtrl.curFrame;
-
-	int fake_puzzle[] = {0,1,2,3, 4,5,6,7, 8,9,0,1, 2,3,4,5, 0,1,2,3, 4,5,6,7, 8,9,0,1, 2,3,4,5, 0,1,2,3, 4,5,6,7, 8,9,0,1, 2,3,4,5, 0,1,2,3, 4,5,6,7, 8,9,0,1, 2,3,4,5};
-	int puzzle_size = 4;
 
 	while (1) {
 			// Switch the frame we're modifying to be the back buffer (1 to 0, or 0 to 1)
@@ -112,12 +95,12 @@ int main_oldd(void) {
 			// Clear the entire frame to white (inefficient, but it works)
 			memset(frame, 0xFF, MAX_FRAME*4);
 
-			for(int tile = 0;   tile<puzzle_size*puzzle_size;   tile++)
+			for(int tile = 0;   tile<size*size;   tile++)
 			{
 				for(int section=0;   section<4;   section++)
 				{
 
-					int colour_to_use = get_colour(fake_puzzle[tile*4 + section]);
+					int colour_to_use = get_colour(puzzle[tile*4 + section]);
 
 					int x_start;
 					int x_width;
@@ -151,10 +134,10 @@ int main_oldd(void) {
 							break;
 					}
 
-					int row = floor(tile / puzzle_size);
+					int row = floor(tile / size);
 					int row_stride = (row * 45) * 1440;
 
-					int column = tile % puzzle_size;
+					int column = tile % size;
 					int column_stride = column * 45;
 
 					int increasing = 1;

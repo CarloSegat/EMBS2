@@ -9,6 +9,7 @@
 #include <lwip/ip_addr.h>
 #include <lwip/udp.h>
 
+
 int init_platform(unsigned char *mac_ethernet_address, ip_addr_t *ipaddr, ip_addr_t *netmask);
 void handle_ethernet();
 
